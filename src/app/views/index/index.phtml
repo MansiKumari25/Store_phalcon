@@ -1,0 +1,145 @@
+<?= $this->tag->getDoctype() ?>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><?= $this->tag->getTitle(); ?></title>
+    <?php echo $this->tag->stylesheetLink('https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css', false); ?>
+    <?php echo $this->tag->stylesheetLink('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;900&display=swap', false); ?>
+    <?php echo $this->tag->stylesheetLink('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css', false); ?>
+    <?php echo $this->tag->stylesheetLink('https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@500;900&display=swap', false); ?>
+</head>
+  <body>
+
+    <div class="container-fluid">
+
+        <?php include('shopcomponents/header.php'); ?>
+      <!-- navbar -->
+
+      <!-- main page -->
+        <?php include 'shopcomponents/navbar.php'; ?>
+
+      <div class="row">
+        <!-- -lg-12 col-md-12 col-sm-12 -->
+        <div class="col">
+          <!-- Carousel -->
+          <div id="demo" class="carousel slide" data-bs-ride="carousel">
+
+            <!-- Indicators/dots -->
+            <div class="carousel-indicators">
+              <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
+              <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
+              <button type="button" data-bs-target="#demo" data-bs-slide-to="2"></button>
+            </div>
+
+            <!-- The slideshow/carousel -->
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <img src="https://source.unsplash.com/1200x550/?nature" alt="nature" class="d-block m-auto">
+                <div class="carousel-caption mb-5">
+                  <span class="m-auto rounded-pill bg-white text-dark genre p-2">Science Fiction</span>
+                  <div class="w-25 m-auto mt-3 mb-3">
+                    <h3 class="display-5">The History of Phipino</h3>
+                  </div>
+                  <button class="btn rounded-pill colred text-white text-weight-bold">Browse Store</button>
+                </div>
+              </div>
+              <div class="carousel-item">
+                <img src="https://source.unsplash.com/1200x550/?fiction" alt="Chicago" class="d-block m-auto">
+                <div class="carousel-caption mb-5">
+                  <span class="m-auto rounded-pill bg-white text-dark genre p-2">Science Fiction</span>
+                  <div class="w-25 m-auto mt-3 mb-3">
+                    <h3 class="display-5">The History of Phipino</h3>
+                  </div>
+                  <button class="btn rounded-pill colred text-white text-weight-bold">Browse Store</button>
+                </div>
+              </div>
+              <div class="carousel-item">
+                <img src="https://source.unsplash.com/1200x550/?adventure" alt="New York" class="d-block m-auto">
+                <div class="carousel-caption mb-5">
+                  <span class="m-auto rounded-pill bg-white text-dark genre p-2">Science Fiction</span>
+                  <div class="w-25 m-auto mt-3 mb-3">
+                    <h3 class="display-5">The History of Phipino</h3>
+                  </div>
+                  <button class="btn rounded-pill colred text-white text-weight-bold">Browse Store</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- cards section -->
+      <div class="row">
+        <div class="col">
+          <h2 class="m-auto text-center">Our Best Products</h2>
+          <?php echo $this->flashSession->output(); ?>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col">
+          <div class="d-flex flex-wrap justify-content-center p-5" id="cards">
+
+            <!-- dynamic product listing  -->
+            <?php
+            foreach ($products as $product) {
+            ?>
+              <div class="scard card m-2 w-25" id="<?php echo $product->product_sku; ?>">
+                <img class="card-img-top" src="./images/img.jpg" alt="Card image">
+                <div class="card-body">
+                  <h4 class="card-title productname" id="<?php echo $product->productname; ?>"><?php echo $product->productname; ?></h4>
+                  <h5 class="card-title category" id="<?php echo $product->category ; ?>"><?php echo $product->category; ?></h5>
+                  <p class="card-text"><?php echo $product->description; ?></p>
+                  <div class="d-flex justify-content-between">
+                    <div>
+                      <span><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i><i class="fa fa-star text-warning"></i></span>
+                      <p>(120 Review)</p>
+                    </div>
+                    <div>
+                      <span class="price"><?php echo $product->price;  ?></span>
+                    </div>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <a href="card.php?sku=<?php echo $product->product_sku; ?>&category=<?php echo $product->category; ?>"><button class="bg-primary text-white viewproduct">View Product</button></a>
+                    <?=$this->tag->form(["user/addtoCart", "class"=>"form"]) ?>
+                      <?= $this->tag->hiddenField(["pid", "value"=>$product->product_sku]) ?>
+                      <?= $this->tag->submitButton(["addcart", "value"=>"Add To Cart", "class"=>"btn btn-success"]) ?>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            <?php
+            }
+            ?>
+
+          </div>
+        </div>
+
+        <div class="row">
+            <?php
+             echo "<pre>";
+             print_r($this->session->get("cart"));
+            ?>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- banner section -->
+    <div id="downside">
+
+        <?php include 'shopcomponents/footer.php'; ?>
+
+    </div>
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="./assets/js/index.js"></script>
+
+  </body>
+
+  </html>

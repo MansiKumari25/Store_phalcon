@@ -1,0 +1,169 @@
+<?php
+if (is_null($this->session->get("admin"))) {
+    $this->response->redirect("admin");
+} else {
+?>
+<body>
+    <?php include 'components/header.phtml'; ?>
+    <?php include 'components/sidebar.phtml'; ?>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Dashboard</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+          <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+          </div>
+          <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+            <span data-feather="calendar"></span>
+            This week
+          </button>
+        </div>
+      </div>
+      
+
+      <?php
+      if($this->flashSession->output() !== null) {
+        echo $this->flashSession->output();
+      }
+      ?>
+
+      <div class="d-flex justify-content-between">
+      <h2 id="title">All Products </h2>
+      <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal">
+       Add Product
+      </button>
+      </div>
+          <!-- The Modal -->
+      <div class="modal" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">Add Product Details</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+
+            <!-- Product details form  -->
+            
+            <?= $this->tag->form(["product/add", "class"=>"form"]) ?>
+            <table class="m-auto">
+              <tr>
+                <td> <label for="productname">Product Name</label></td>
+                <td> <?php echo $form->render("productname"); ?></td>
+              </tr>
+              <tr>
+                <td> <label for="price">Price</label></td>
+                <td> <?php echo $form->render("price"); ?></td>
+              </tr>
+              <tr>
+                <td> <label for="category">Category</label></td>
+                <td> <?php echo $form->render("category"); ?></td>
+              </tr>
+              <tr>
+                <td> <label for="description">Description</label></td>
+                <td> <?php echo $form->render("description"); ?></td>
+              </tr>
+              <tr>
+                <td colspan=2> <?= $this->tag->submitButton(["Add Product", "class"=>"btn btn-info w-100"]) ?></td>
+                
+              </tr>
+            </table>
+            </form>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive" id="section">
+        <table class='table table-striped table-sm'>
+              <thead>
+                <tr>
+                  <th scope='col'>Product ID</th>
+                  <th scope='col'>Product Name</th>
+                  <th scope='col'>Price</th>
+                  <th scope='col'>Category</th>
+                  <th scope='col'>Image</th>
+                  <th scope='col'>Descrtiption</th>
+                  <th scope='col'>Status</th>
+                  <th scope='col'>Date</th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>      
+            <?php
+            foreach ($products as $product) {
+              ?>
+                  <tr>
+                    <td><?= $product->product_sku; ?></td>
+                    <td><?= $product->productname; ?></td>
+                    <td><?= $product->price; ?></td>
+                    <td><?= $product->category; ?></td>
+                    <td><?= $product->image; ?></td>
+                    <td><?= $product->description; ?></td>
+                    <td>
+
+                    <?php
+                        switch ($product->status) {
+                            case 'Pending':
+                            case "pending":
+                                $select = "<option value='" . $product->status . "' selected> " . $product->status . "</option> 
+                                               <option value='approved'>approved</option>
+                                               <option value='not approved'>not approved</option>";
+                                break;
+                            case "Approved":
+                            case "approved":
+                                $select = "<option value='" . $product->status . "' selected> " . $product->status. "</option> 
+                                                   <option value='pending'>pending</option>
+                                                   <option value='not approved'>not approved</option>";
+                                break;
+                            case "Not approved":
+                            case "not approved":
+                                $select = "<option value='" . $product->status . "' selected> " . $product->status . "</option> 
+                                                       <option value='approved'>approved</option>
+                                                       <option value='pending'>pending</option>";
+                                break;
+                        }
+                    ?>
+                    <?= $this->tag->form(["admin/productStatus", "class" => "form"]) ?>
+                    <?= $this->tag->hiddenField(["sku", "value" => $product->product_sku]) ?>
+                        <select name="status" onchange="this.form.submit()">
+                            <?=$select ?>
+                        </select>
+                    </form>
+                    </td>
+                    <td><?= $product->date; ?></td>
+                    <td>
+                        <?= $this->tag->form(["admin/deleteproduct", 'class'=>"form"]) ?>
+                            <?= $this->tag->hiddenField(["sku", "value" => $product->product_sku]) ?>
+                            <?= $this->tag->submitButton(["DELETE", "class" => "btn btn-danger"]) ?>
+                        </form>
+                    </td>
+                  </tr>
+                <?php 
+            }
+            ?>
+              </tbody>
+        </table>
+      </div>
+    </main>
+    </div>
+    </div>
+   
+</body>
+<?php
+
+}
+

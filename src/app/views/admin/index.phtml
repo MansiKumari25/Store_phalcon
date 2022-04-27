@@ -1,0 +1,22 @@
+
+<div class="container">
+<main class="form-signin w-50 m-auto">
+<h1 class="h3 mb-3 fw-normal  text-center">Sign In</h1>
+    <?php echo $this->flashSession->output(); ?>
+    <?php echo $this->tag->form(["admin/dashboard", "class"=>"w-100 form m-3"]); ?>     
+      <div class="form-floating">
+      <label for="email">Email</label>
+      <?= $form->render("email"); ?>
+      </div>
+
+      <div class="form-floating">
+      <label for="password">Password</label>
+      <?= $form->render("password"); ?>
+      </div>
+      <div class="text-center m-3">
+      <?= $this->tag->submitButton(["Login", "class"=>"btn btn-primary"]); ?>
+    </div>
+    </form>
+    </div>
+
+
